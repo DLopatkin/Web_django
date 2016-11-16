@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ myuser.nickname }}{% endblock %}
+
+{% block content %}
+    <div align="middle">
+    <div class="pin">
+    {%  if myuser.avatar %}
+        <img src = '{{ myuser.avatar.url }}' width="200px"> <br>
+    {% endif %}
+    <strong>Username: </strong> {{ myuser.username }}<br>
+    {% if user == myuser %}
+    <a href="{% url 'main_page:edit' pk=myuser.id %}"> EDIT </a>
+    {% endif %}
+    </div>
+    </div>
+{%endblock%}

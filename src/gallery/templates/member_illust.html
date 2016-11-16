@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %} {{ gallery.name }} {% endblock %}
+
+{% block content %}
+    <div align="middle">
+        <div class="pin">
+            <img src="{{ gallery.work.url }}">
+            <p><i>{{ gallery.description }} </i> by <a href="{{ gallery.author.get_absolute_url }}"> {{ gallery.author }} </a> </p>
+
+            {{ gallery.created|date:"d-m-y" }}<br>
+            {% if user == gallery.author %}
+                <h1> Status: {{ gallery.status }} </h1>
+                <a href="{% url 'galleries:edit' pk=gallery.id %}"> EDIT </a>
+            {% endif %}
+            <p>Bookmarks:{{ gallery.rating }}</p>
+        {% if user.is_authenticated and user != gallery.author %}
+            <a href="{% url 'bookmark:add' pk=gallery.id %}"> ADD BOOKMARK</a>
+        {% endif %}
+        </div>
+    </div>
+    <div class="form-style">
+        <h1> Comments: </h1> <br>
+        {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input class="my_btn" type="submit", value="Add comment">
+            </form>
+        {% endif %}
+    </div>
+
+    {%if gallery.get_comments.all %}
+    {% for comment in gallery.get_comments.all %}
+        <div align="middle">
+    {% if comment.author == gallery.author%}
+    <div class="pin">
+        <strong><a href="{% url 'main_page:user' pk=comment.author.id %}">{{comment.author.username}}</a>:  </strong> <br>
+        <p>{{comment.text}}</p>
+        <i>{{comment.created_at}}</i> <br><br>
+    </div>
+    {% else %}
+    <div class="pin">
+        <strong><a href="{% url 'main_page:user' pk=comment.author.id %}">{{comment.author.username}}</a>:  </strong> <br>
+        <p>{{comment.text}}</p>
+        <i>{{comment.created_at}}</i> <br><br>
+    </div>
+    {% endif %}
+        </div>
+    {% endfor %}
+    {%endif%}
+
+{% endblock %}

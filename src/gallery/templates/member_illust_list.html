@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Works list{% endblock %}
+
+{% block content %}
+    <div align="center">
+        <form>
+            {{ search_form.search.errors }}
+            {{ search_form.search.label_tag }} <br>
+            {{ search_form.search }}
+            <input class="my_btn" type="submit" value="Let's find it.">
+        </form>
+        {% if not object_list %}
+            <h2>Not found.</h2>
+        {% endif %}
+    </div>
+    <div id="wrapper">
+        <div id="columns">
+            {% for gallery in object_list %}
+                {% if gallery.status == "OK"  or user == gallery.author %}
+                    <div class="pin">
+                        <p align="middle">
+                            {{gallery.name}}
+                        </p>
+                        <a href = "{% url 'galleries:detail' pk=gallery.id %}">
+                            <img src="{{ gallery.work.url }}">
+                        </a>
+                        <p align="right">
+                            <a href="{% url 'main_page:user' pk=gallery.author.id %}"><strong>{{gallery.author.username}}</strong></a>
+                        </p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
